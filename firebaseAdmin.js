@@ -1,5 +1,8 @@
 const admin = require("firebase-admin");
-const serviceAccount = require(process.env.FIREBASE_KEY); // Ganti dengan path ke file kredensial Firebase kamu
+require('dotenv').config();
+
+// Pastikan FIREBASE_CREDENTIALS sudah diset di environment variable
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),

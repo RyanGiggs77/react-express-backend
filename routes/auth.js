@@ -29,7 +29,7 @@ router.post('/google-login', async (req, res) => {
             .eq('email', email);
 
         if (selectError) {
-            console.error("Select Error:", selectError.message); // Log error to terminal
+            console.error("Select Error:", selectError.message); // Log error ke terminal
             return res.status(500).json({ error: 'Error checking user', details: selectError.message });
         }
 
@@ -43,7 +43,7 @@ router.post('/google-login', async (req, res) => {
                 .single();
 
             if (insertError) {
-                console.error("Insert Error:", insertError.message); // Log error to terminal
+                console.error("Insert Error:", insertError.message); // Log error ke terminal
                 return res.status(500).json({ error: 'Error creating user', details: insertError.message });
             }
 
@@ -62,14 +62,14 @@ router.post('/google-login', async (req, res) => {
             .eq('id', user.id);
 
         if (updateError) {
-            console.error("Update Error:", updateError.message); // Log error to terminal
+            console.error("Update Error:", updateError.message); // Log error ke terminal
             return res.status(500).json({ error: 'Error updating refresh token', details: updateError.message });
         }
 
         res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'strict' });
         res.json({ accessToken });
     } catch (error) {
-        console.error("Google Login Error:", error.message); // Log error to terminal
+        console.error("Google Login Error:", error.message); // Log error ke terminal
         res.status(401).json({ error: 'Invalid Firebase Token', details: error.message });
     }
 });
@@ -106,7 +106,6 @@ router.post('/register', [
         res.status(500).json({ error: 'Error registering user', details: error.message });
     }
 });
-
 
 // LOGIN
 router.post('/login', async (req, res) => {
@@ -158,16 +157,7 @@ router.post('/refresh', async (req, res) => {
     if (!refreshToken) return res.status(403).json({ error: 'Access Denied' });
 
     try {
-        // const result = await supabase.query('SELECT * FROM users WHERE refresh_token = $1', [refreshToken]);
-        // if (result.rows.length === 0) return res.status(403).json({ error: 'Invalid Refresh Token' });
-
-        // const user = result.rows[0];
-        // jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err) => {
-        //     if (err) return res.status(403).json({ error: 'Invalid Token' });
-        //     res.json({ accessToken: generateAccessToken(user) });
-        // });
-
-        const {data,error} = await supabase.from("users").select("*").eq("refresh_token", refreshToken);
+        const { data, error } = await supabase.from("users").select("*").eq("refresh_token", refreshToken);
         if (error) {
             console.error("Refresh Token Error:", error.message); // Log error ke terminal
             return res.status(500).json({ error: 'Error refreshing token', details: error.message });

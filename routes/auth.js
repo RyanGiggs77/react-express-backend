@@ -143,7 +143,7 @@ router.post('/login', async (req, res) => {
             return res.status(500).json({ error: 'Error updating refresh token', details: updateError.message });
         }
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'strict' });
+        res.cookie('refreshToken', refreshToken, { httpOnly: false, secure: true, sameSite: 'strict' });
         res.json({ accessToken, userId: user.id, email: user.email, displayName: user.display_name || user.email });
 
     } catch (error) {

@@ -1,6 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+
+// LOGIN DENGAN GOOGLE (FIREBASE)
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const supabase = require('../database');
 const { body, validationResult } = require('express-validator');
 const admin = require('../firebaseAdmin'); // Firebase Admin SDK
@@ -73,6 +79,8 @@ router.post('/google-login', async (req, res) => {
         res.status(401).json({ error: 'Invalid Firebase Token', details: error.message });
     }
 });
+
+module.exports = router;
 
 // REGISTER
 router.post('/register', [

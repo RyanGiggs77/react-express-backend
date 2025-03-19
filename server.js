@@ -13,7 +13,7 @@ app.use(cors({ origin: ['http://localhost:5000','http://localhost:5173','https:/
 app.use(cookieParser());
 
 app.use('/auth', authRoutes);
-app.use('/account', accountRoutes); // Perbaiki path ini
+app.use(accountRoutes); // Perbaiki path ini
 app.use('/transactions', transactionsRoutes); // Tambahkan route ini
 
 app.listen(process.env.PORT, () => {

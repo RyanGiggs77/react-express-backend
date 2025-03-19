@@ -14,7 +14,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRoutes);
 app.use(accountRoutes); // Perbaiki path ini
-app.use('/transactions', transactionsRoutes); // Tambahkan route ini
+app.use(transactionsRoutes); // Tambahkan route ini
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);

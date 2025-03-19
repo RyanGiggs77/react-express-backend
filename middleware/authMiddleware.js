@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1]; // Ambil token dari header
-    if (!token) return res.status(401).json({ error: 'Access Denied' });
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401); // Jika tidak ada token, kirim status 401
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ error: 'Invalid Token' });
-
+        if (err) return res.sendStatus(403); // Jika token tidak valid, kirim status 403
         req.user = user;
-        console.log("Decoded Token:", req.user); // Cek apakah ID user ada
         next();
     });
 };

@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const pool = require('../database');
+const supabase = require('../database');
 const { body, validationResult } = require('express-validator');
 const admin = require('../firebaseAdmin'); // Firebase Admin SDK
 const router = express.Router();
@@ -23,7 +23,7 @@ router.post('/google-login', async (req, res) => {
         const { email, name } = decodedToken;
         
         // Query to check if user exists
-        const { data: existingUsers, error: selectError } = await pool
+        const { data: existingUsers, error: selectError } = await supabase
             .from('users')
             .select('*')
             .eq('email', email);
@@ -36,7 +36,7 @@ router.post('/google-login', async (req, res) => {
         let user;
         if (existingUsers.length === 0) {
             // Insert new user
-            const { data: newUser, error: insertError } = await pool
+            const { data: newUser, error: insertError } = await supabase
                 .from('users')
                 .insert([{ email, password: null, display_name: name || email, balance: 0, xp: 0, cvv: '000' }])
                 .select('id, email, display_name')
@@ -56,7 +56,7 @@ router.post('/google-login', async (req, res) => {
         const refreshToken = generateRefreshToken(user);
 
         // Update refresh token
-        const { error: updateError } = await pool
+        const { error: updateError } = await supabase
             .from('users')
             .update({ refresh_token: refreshToken })
             .eq('id', user.id);
@@ -88,7 +88,7 @@ router.post('/register', [
 
         console.log("Registering user:", email); // Log email untuk debugging
 
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from("users")
             .insert([{ email, password: hashedPassword }])
             .select("id, email"); // Ambil hanya id dan email
@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         console.log("Logging in with email:", email); // Log email untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from("users")
             .select("*")
             .eq("email", email);
@@ -133,7 +133,7 @@ router.post('/login', async (req, res) => {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        const { updateError } = await pool
+        const { updateError } = await supabase
             .from("users")
             .update({ refresh_token: refreshToken })
             .eq("id", user.id);
@@ -158,7 +158,7 @@ router.post('/refresh', async (req, res) => {
     if (!refreshToken) return res.status(403).json({ error: 'Access Denied' });
 
     try {
-        // const result = await pool.query('SELECT * FROM users WHERE refresh_token = $1', [refreshToken]);
+        // const result = await supabase.query('SELECT * FROM users WHERE refresh_token = $1', [refreshToken]);
         // if (result.rows.length === 0) return res.status(403).json({ error: 'Invalid Refresh Token' });
 
         // const user = result.rows[0];
@@ -167,7 +167,7 @@ router.post('/refresh', async (req, res) => {
         //     res.json({ accessToken: generateAccessToken(user) });
         // });
 
-        const {data,error} = await pool.from("users").select("*").eq("refresh_token", refreshToken);
+        const {data,error} = await supabase.from("users").select("*").eq("refresh_token", refreshToken);
         if (error) {
             console.error("Refresh Token Error:", error.message); // Log error ke terminal
             return res.status(500).json({ error: 'Error refreshing token', details: error.message });
@@ -192,7 +192,7 @@ router.post('/logout', async (req, res) => {
 
         console.log("Logging out with refresh token:", refreshToken); // Log refresh token untuk debugging
 
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from("users")
             .select("*")
             .eq("refresh_token", refreshToken);
@@ -214,7 +214,7 @@ router.post('/logout', async (req, res) => {
             }
         }
 
-        const { updateError } = await pool
+        const { updateError } = await supabase
             .from("users")
             .update({ refresh_token: null })
             .eq("id", user.id);

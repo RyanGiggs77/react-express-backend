@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('../database');
+const supabase = require('../database');
 const { authenticateToken } = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.post('/account', authenticateToken, async (req, res) => {
 
     try {
         console.log("Creating account for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('accounts')
             .insert([{ user_id: userId, balance: balance || 0.00, cvv, xp }])
             .select('*')
@@ -34,7 +34,7 @@ router.get('/account', authenticateToken, async (req, res) => {
 
     try {
         console.log("Fetching account for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('accounts')
             .select('user_id, balance, cvv, xp')
             .eq('user_id', userId)
@@ -61,7 +61,7 @@ router.put('/account', authenticateToken, async (req, res) => {
 
     try {
         console.log("Updating account for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('accounts')
             .update({ balance, cvv, xp })
             .eq('user_id', userId)
@@ -88,7 +88,7 @@ router.delete('/account', authenticateToken, async (req, res) => {
 
     try {
         console.log("Deleting account for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('accounts')
             .delete()
             .eq('user_id', userId)

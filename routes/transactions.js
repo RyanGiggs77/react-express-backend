@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('../database');
+const supabase = require('../database');
 const { authenticateToken } = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.post('/transactions', authenticateToken, async (req, res) => {
 
     try {
         console.log("Creating transaction for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('transactions')
             .insert([{ user_id: userId, transaction: name, data: new Date(), amount, note, status }])
             .select('*')
@@ -34,7 +34,7 @@ router.get('/transactions', authenticateToken, async (req, res) => {
     console.log("Fetching transactions for user:", userId); // Debugging
 
     try {
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('transactions')
             .select('id, transaction, data, amount, note, status')
             .eq('user_id', userId)
@@ -58,7 +58,7 @@ router.get('/transactions/:id', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('transactions')
             .select('*')
             .eq('id', id)
@@ -87,7 +87,7 @@ router.put('/transactions/:id', authenticateToken, async (req, res) => {
 
     try {
         console.log("Updating transaction for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('transactions')
             .update({ transaction: name, amount, note, status })
             .eq('id', id)
@@ -116,7 +116,7 @@ router.delete('/transactions/:id', authenticateToken, async (req, res) => {
 
     try {
         console.log("Deleting transaction for user:", userId); // Log userId untuk debugging
-        const { data, error } = await pool
+        const { data, error } = await supabase
             .from('transactions')
             .delete()
             .eq('id', id)

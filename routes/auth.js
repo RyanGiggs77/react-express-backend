@@ -21,13 +21,13 @@ router.post('/google-login', async (req, res) => {
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const { email, name } = decodedToken;
-        
+
         // Query to check if user exists
         const { data: existingUsers, error: selectError } = await supabase
             .from('users')
             .select('*')
             .eq('email', email);
-        
+
         if (selectError) {
             console.error("Select Error:", selectError.message); // Log error to terminal
             return res.status(500).json({ error: 'Error checking user', details: selectError.message });
@@ -41,7 +41,7 @@ router.post('/google-login', async (req, res) => {
                 .insert([{ email, password: null, display_name: name || email, balance: 0, xp: 0, cvv: '000' }])
                 .select('id, email, display_name')
                 .single();
-            
+
             if (insertError) {
                 console.error("Insert Error:", insertError.message); // Log error to terminal
                 return res.status(500).json({ error: 'Error creating user', details: insertError.message });

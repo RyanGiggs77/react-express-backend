@@ -1,12 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-
-// LOGIN DENGAN GOOGLE (FIREBASE)
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const supabase = require('../database');
 const { body, validationResult } = require('express-validator');
 const admin = require('../firebaseAdmin'); // Firebase Admin SDK
@@ -72,15 +66,13 @@ router.post('/google-login', async (req, res) => {
             return res.status(500).json({ error: 'Error updating refresh token', details: updateError.message });
         }
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'strict' });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'None' });
         res.json({ accessToken });
     } catch (error) {
         console.error("Google Login Error:", error.message); // Log error ke terminal
         res.status(401).json({ error: 'Invalid Firebase Token', details: error.message });
     }
 });
-
-module.exports = router;
 
 // REGISTER
 router.post('/register', [
@@ -150,7 +142,7 @@ router.post('/login', async (req, res) => {
             return res.status(500).json({ error: 'Error updating refresh token', details: updateError.message });
         }
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: false, secure: true, sameSite: 'None' });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'None' });
         res.json({ accessToken, userId: user.id, email: user.email, displayName: user.display_name || user.email });
 
     } catch (error) {

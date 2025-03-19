@@ -9,7 +9,7 @@ const transactionsRoutes = require('./routes/transactions'); // Pastikan path in
 
 const app = express();
 app.use(express.json());
-app.use(cors({
+app.options('*', cors({
     origin: ['http://localhost:5000', 'http://localhost:5173', 'https://project-reactjs-eta.vercel.app', 'https://react-express-backend.vercel.app'],
     credentials: true
 }));

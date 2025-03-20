@@ -6,6 +6,7 @@ const supabase = require('./database');
 const accountRoutes = require('./routes/accounts');
 const authRoutes = require('./routes/auth');
 const transactionsRoutes = require('./routes/transactions'); // Pastikan path ini benar
+const promosRoutes = require('./routes/promos')
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use('/auth', authRoutes);
 app.use(accountRoutes); // Perbaiki path ini
 app.use(transactionsRoutes); // Tambahkan route ini
+app.use(promosRoutes)
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);

@@ -4,7 +4,7 @@ const router = express.Router();
 
 // **CREATE PROMO**
 router.post('/promos', async (req, res) => {
-    const { promos_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name } = req.body;
+    const { promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name } = req.body;
 
     try {
         console.log("Creating promo:" . promo_name); // Log promo_name for debugging

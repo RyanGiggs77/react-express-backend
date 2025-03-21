@@ -14,6 +14,8 @@ router.post('/promos', async (req, res) => {
             .select('*')
             .single();
 
+        console.log(data);
+
         if (error) {
             console.error("Create Promo Error:", error.message); // log error
             return res.status(500).json({ error: 'Failed to create promo', details: error.message });

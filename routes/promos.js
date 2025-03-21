@@ -10,7 +10,7 @@ router.post('/promos', async (req, res) => {
         console.log("Creating promo:" . promo_name); // Log promo_name for debugging
         const { data, error } = await supabase
             .from('promos')
-            .insert([{ promos_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name }])
+            .insert([{ promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name }])
             .select('*')
             .single();
 
@@ -78,13 +78,13 @@ router.get('/promos/:id', async (req, res) => {
 // **UPDATE PROMO**
 router.put('/promos/:id', async (req, res) => {
     const { id } = req.params;
-    const { promos_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name } = req.body;
+    const { promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name } = req.body;
 
     try {
         console.log("Updating promo:", id); // Log for debugging
         const { data, error } = await supabase
             .from('promos')
-            .update({ promos_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name })
+            .update({ promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name })
             .eq('id', id)
             .select('*')
             .single();

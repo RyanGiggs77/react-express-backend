@@ -4,13 +4,13 @@ const router = express.Router();
 
 // **CREATE PROMO**
 router.post('/promos', async (req, res) => {
-    const { promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name } = req.body;
+    const { promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name, image_url } = req.body;
 
     try {
         console.log("Creating promo:" . promo_name); // Log promo_name for debugging
         const { data, error } = await supabase
             .from('promos')
-            .insert([{ promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name }])
+            .insert([{ promo_start, promo_end, usage_period, max_transaction, about, how_to, team_conditions, partners, promo_name, image_url }])
             .select('*')
             .single();
 
